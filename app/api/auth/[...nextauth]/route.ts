@@ -34,6 +34,21 @@ export const authOptions = {
     }),
   ],
   session: { strategy: "jwt" },
+    callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role as string;
+      }
+      return session;
+    },
+  },
   pages: { signIn: "/login" },
 };
 

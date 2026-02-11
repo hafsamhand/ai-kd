@@ -1,16 +1,16 @@
-import { prisma } from "../../lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function DashboardPage() {
-  const users = await prisma.user.findMany();
+  const session = await getServerSession(authOptions);
 
   return (
-    <div>
-      <h1>All Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.email}</li>
-        ))}
-      </ul>
+    <div style={{ padding: 40 }}>
+      <h1>Dashboard</h1>
+      <p>Name: {session?.user?.name}</p>
+      <p>Email: {session?.user?.email}</p>
+      <p>Role: {session?.user?.role}</p>
+      <a href="/api/auth/signout">Logout</a>
     </div>
   );
 }

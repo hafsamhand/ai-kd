@@ -1,16 +1,65 @@
-import { prisma } from "../../lib/prisma";
+"use client";
 
-export default async function DashboardPage() {
-  const users = await prisma.user.findMany();
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Invalid email or password");
+    } else {
+      router.push("/dashboard");
+    }
+  }
 
   return (
-    <div>
-      <h1>All Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.email}</li>
-        ))}
-      </ul>
+    <div style={{ maxWidth: 400, margin: "100px auto" }}>
+      <h1>Login</h1>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">Login</button>
+      </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <p>
+        No account? <a href="/register">Register</a>
+      </p>
     </div>
   );
 }
