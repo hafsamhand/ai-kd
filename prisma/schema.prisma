@@ -23,7 +23,8 @@ model User {
 
   password String? // only if using credentials provider
   role     String    @default("user")
-	
+
+  documents Document[]
   accounts Account[]
   sessions Session[]
 
@@ -31,14 +32,17 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-// model Document {
-// 	id        Int      @id @default(autoincrement())
-// 	title     String
-// 	content   String
-// 	createdAt DateTime @default(now())
-// 	ownerId   Int
-// 	owner     User     @relation("UserDocuments", fields: [ownerId], references: [id])
-// }
+model Document {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 
 model Account {
   id                String  @id @default(cuid())
