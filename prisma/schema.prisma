@@ -36,6 +36,8 @@ model Document {
   id        String   @id @default(cuid())
   title     String
   content   String
+	status    String   @default("draft")
+
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
