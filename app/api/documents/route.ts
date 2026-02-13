@@ -10,8 +10,21 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const isAdmin = session.user.role === "admin";
+
   const documents = await prisma.document.findMany({
-    where: { userId: session.user.id },
+    where: isAdmin
+      ? {} // admin sees everything
+      : { userId: session.user.id }, // user sees only theirs
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 
