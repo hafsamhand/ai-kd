@@ -6,6 +6,23 @@ export default function AdminPanel() {
   const [data, setData] = useState<any>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newRole, setNewRole] = useState("user");
+
+  async function createUser() {
+    await fetch("/api/admin/create-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: newEmail,
+        password: newPassword,
+        role: newRole,
+      }),
+    });
+
+    fetchUsers();
+  }
 
   async function fetchUsers() {
     const res = await fetch(
@@ -37,9 +54,32 @@ export default function AdminPanel() {
 
   if (!data) return <div>Loading...</div>;
 
+  const divStyle = { marginBottom: 20 };
   return (
     <div>
       <h2>User Management</h2>
+
+      <h3>Create User</h3>
+
+      <div style={divStyle}>
+        <input
+          placeholder="Email"
+          onChange={(e) => setNewEmail(e.target.value)}
+        />
+
+        <input
+          placeholder="Password"
+          type="password"
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+
+        <select onChange={(e) => setNewRole(e.target.value)}>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <button onClick={createUser}>Create</button>
+      </div>
 
       <input
         placeholder="Search by email..."

@@ -12,7 +12,7 @@ export async function PUT(
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { title, content } = await req.json();
+  const { title, content, status } = await req.json();
 
   const doc = await prisma.document.findUnique({
     where: { id: id },
@@ -29,7 +29,7 @@ export async function PUT(
 
   const updated = await prisma.document.update({
     where: { id: id },
-    data: { title, content },
+    data: { title, content, status },
   });
 
   return NextResponse.json(updated);

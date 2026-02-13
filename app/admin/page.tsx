@@ -13,31 +13,12 @@ export default async function AdminPage() {
 		redirect("/dashboard");
 	}
 
-	const users = await prisma.user.findMany({
-		include: {
-			documents: true,
-		},
-	});
 	return (
 		<div style={{ padding: 40 }}>
 			<h1>Admin Management Panel</h1>
 
-      <AdminPanel />
-			{users.map((user) => (
-				<div key={user.id} style={{ marginBottom: 40 }}>
-					<h2>{user.email}</h2>
-					<p>Role: {user.role}</p>
-					<p>Documents: {user.documents.length}</p>
+			<AdminPanel />
 
-					<ul>
-						{user.documents.map((doc) => (
-							<li key={doc.id}>
-								{doc.title}
-							</li>
-						))}
-					</ul>
-				</div>
-			))}
 		</div>
 	);
 }

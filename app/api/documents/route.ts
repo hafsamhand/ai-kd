@@ -38,12 +38,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { title, content } = await req.json();
+  const { title, content, status } = await req.json();
 
   const document = await prisma.document.create({
     data: {
       title,
       content,
+      status:status || "draft",
       userId: session.user.id,
     },
   });
