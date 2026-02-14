@@ -30,6 +30,7 @@ export async function GET(req: Request) {
         contains: search,
         mode: "insensitive",
       },
+      deletedAt: null,
     },
     include: {
       documents: true,

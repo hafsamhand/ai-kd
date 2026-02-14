@@ -2,6 +2,7 @@ import { prisma } from "../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { logAction } from "../../../lib/audit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -13,9 +14,10 @@ export async function GET() {
   const isAdmin = session.user.role === "admin";
 
   const documents = await prisma.document.findMany({
-    where: isAdmin
-      ? {} // admin sees everything
-      : { userId: session.user.id }, // user sees only theirs
+    where: {
+      deletedAt: null,
+      ...(isAdmin ? {} : { userId: session.user.id, deletedAt: null }),
+    },
     include: {
       user: {
         select: {
@@ -48,6 +50,8 @@ export async function POST(req: Request) {
       userId: session.user.id,
     },
   });
+
+  await logAction("DOCUMENT_CREATED", session.user.id, { id: document.id, title });
 
   return NextResponse.json(document);
 }

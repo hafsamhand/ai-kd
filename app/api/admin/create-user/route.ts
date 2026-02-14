@@ -3,6 +3,7 @@ import { hash } from "bcrypt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { logAction } from "../../../../lib/audit";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
       role: role || "user",
     },
   });
+
+  await logAction("USER_CREATED", session.user.id, { email });
 
   return NextResponse.json(user);
 }

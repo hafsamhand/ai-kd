@@ -2,6 +2,7 @@ import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { logAction } from "../../../../lib/audit";
 
 export async function PUT(
   req: Request,
@@ -15,7 +16,7 @@ export async function PUT(
   const { title, content, status } = await req.json();
 
   const doc = await prisma.document.findUnique({
-    where: { id: id },
+    where: { id: id, deletedAt: null },
   });
 
   if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -32,6 +33,8 @@ export async function PUT(
     data: { title, content, status },
   });
 
+  await logAction("DOCUMENT_UPDATED", session.user.id, { id, title, status });
+
   return NextResponse.json(updated);
 }
 
@@ -46,7 +49,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const doc = await prisma.document.findUnique({
-    where: { id: id },
+    where: { id: id, deletedAt: null },
   });
 
   if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -58,9 +61,15 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  await prisma.document.delete({
-    where: { id: id },
+  await prisma.document.update({
+    where: { id },
+    data: { deletedAt: new Date() },
   });
+  // await prisma.document.delete({
+  //   where: { id: id },
+  // });
+
+  await logAction("DOCUMENT_DELETED", session.user.id, { id });
 
   return NextResponse.json({ success: true });
 }

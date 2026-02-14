@@ -2,6 +2,7 @@ import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { logAction } from "../../../../lib/audit";
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions);
@@ -28,6 +29,8 @@ export async function PUT(
     data: { role },
   });
 
+  await logAction("USER_UPDATED", session.user.id, { id, role, updatedAt: new Date() });
+
   return NextResponse.json(updated);
 }
 
@@ -49,6 +52,8 @@ export async function DELETE(
   await prisma.user.delete({
     where: { id },
   });
+
+  await logAction("USER_DELETED", session.user.id, { id });
 
   return NextResponse.json({ success: true });
 }
