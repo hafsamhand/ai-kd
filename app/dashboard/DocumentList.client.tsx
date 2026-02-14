@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { DocumentItem } from "../../types/api";
 
 export default function DocumentList() {
-	const [docs, setDocs] = useState([]);
+	const [docs, setDocs] = useState<DocumentItem[]>([]);
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editData, setEditData] = useState({ title: "", content: "", status: "draft" });
 	const [newTitle, setNewTitle] = useState("");
@@ -11,17 +12,17 @@ export default function DocumentList() {
 	const [loading, setLoading] = useState(false);
 	const [showCreateForm, setShowCreateForm] = useState(false);
 
-	async function fetchDocs() {
+	const fetchDocs = useCallback(async () => {
 		setLoading(true);
 		const res = await fetch("/api/documents");
-		const data = await res.json();
+		const data: DocumentItem[] = await res.json();
 		setDocs(data);
 		setLoading(false);
-	}
+	}, []);
 
 	useEffect(() => {
 		fetchDocs();
-	}, []);
+	}, [fetchDocs]);
 
 	async function deleteDoc(id: string) {
 		if (!confirm("Are you sure you want to delete this document?")) return;
@@ -31,7 +32,7 @@ export default function DocumentList() {
 		fetchDocs();
 	}
 
-	function startEdit(doc: any) {
+	function startEdit(doc: DocumentItem) {
 		setEditingId(doc.id);
 		setEditData({ title: doc.title, content: doc.content, status: doc.status });
 	}
@@ -125,7 +126,7 @@ export default function DocumentList() {
 					</div>
 				) : (
 					<div className="space-y-4">
-						{docs.map((doc: any) => (
+						{docs.map((doc: DocumentItem) => (
 							<div key={doc.id} className="bg-gray-50 rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
 								{editingId === doc.id ? (
 									<div className="space-y-4 border border-gray-200 rounded-lg p-4 bg-white">

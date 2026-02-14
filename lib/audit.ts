@@ -1,6 +1,10 @@
 import { prisma } from "./prisma";
 
-export async function logAction(action: string, userId?: string, metadata?: any) {
+export async function logAction(
+  action: string,
+  userId?: string,
+  metadata?: Record<string, unknown>
+) {
   await prisma.auditLog.create({
     data: {
       action,

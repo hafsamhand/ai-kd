@@ -76,3 +76,14 @@ button, a, input, select, textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--grey-400);
 }
+
+button{
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+}
+
+.card{
+  border-radius: 4px;
+  padding: 0.5rem 1rem !important;
+  margin: .5rem;
+}

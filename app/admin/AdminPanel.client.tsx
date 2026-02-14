@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { AdminUsersResponse, AdminUserItem } from "../../types/api";
 
 export default function AdminPanel() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AdminUsersResponse | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -33,17 +34,17 @@ export default function AdminPanel() {
     fetchUsers();
   }
 
-  async function fetchUsers() {
+  const fetchUsers = useCallback(async () => {
     const res = await fetch(
       `/api/admin/users?page=${page}&search=${search}`
     );
-    const json = await res.json();
+    const json: AdminUsersResponse = await res.json();
     setData(json);
-  }
+  }, [page, search]);
 
   useEffect(() => {
     fetchUsers();
-  }, [page, search]);
+  }, [fetchUsers]);
 
   async function changeRole(id: string, role: string) {
     await fetch(`/api/admin/users/${id}`, {
@@ -146,7 +147,7 @@ export default function AdminPanel() {
           </div>
         ) : (
           <div className="space-y-4">
-            {data.users.map((user: any) => (
+            {data.users.map((user: AdminUserItem) => (
               <div key={user.id} className="bg-gray-50 rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">

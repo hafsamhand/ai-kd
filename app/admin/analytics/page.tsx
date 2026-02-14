@@ -28,8 +28,8 @@ const recentLogs = await prisma.auditLog.findMany({
                 <p className="text-gray-600 text-sm sm:text-base">System statistics and activity overview</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-2 sm:p-5 border border-blue-200 shadow-md hover:shadow-lg transition-shadow">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-[.5rem]">
+                <div className="card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-2 sm:p-5 border border-blue-200 shadow-md hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base sm:text-lg font-semibold text-gray-700">Total Users</h2>
                         <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -41,7 +41,7 @@ const recentLogs = await prisma.auditLog.findMany({
                     <p className="text-3xl sm:text-4xl font-bold text-gray-800">{totalUsers}</p>
                 </div>
                 
-                <div className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-xl p-2 sm:p-5 border border-violet-200 shadow-md hover:shadow-lg transition-shadow">
+                <div className="card bg-gradient-to-br from-violet-50 to-violet-100 rounded-xl p-2 sm:p-5 border border-violet-200 shadow-md hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base sm:text-lg font-semibold text-gray-700">Total Documents</h2>
                         <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
@@ -53,7 +53,7 @@ const recentLogs = await prisma.auditLog.findMany({
                     <p className="text-3xl sm:text-4xl font-bold text-gray-800">{totalDocs}</p>
                 </div>
                 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-2 sm:p-5 border border-green-200 shadow-md hover:shadow-lg transition-shadow">
+                <div className="card bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-2 sm:p-5 border border-green-200 shadow-md hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-base sm:text-lg font-semibold text-gray-700">Published Documents</h2>
                         <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
