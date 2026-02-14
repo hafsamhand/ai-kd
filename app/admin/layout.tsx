@@ -3,10 +3,11 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import Navbar from "../components/Navbar";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
   if (!session) redirect("/login");
+  if (session.user?.role !== "admin") redirect("/dashboard");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-violet-50/30">
