@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Tell Tailwind v4 where to find class names */
+@source "../app/**/*.{js,ts,jsx,tsx}";
+@source "../src/**/*.{js,ts,jsx,tsx}";
+
 :root {
   --background: #ffffff;
   --foreground: #1f2937;
@@ -41,17 +45,17 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  /* Background is set via Tailwind classes in layout (e.g. gradient) */
 }
 
-/* Smooth transitions */
-* {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+/* Smooth transitions - only for interactive elements to avoid layout thrashing */
+button, a, input, select, textarea {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 /* Custom scrollbar */
@@ -71,4 +75,15 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--grey-400);
+}
+
+button{
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+}
+
+.card{
+  border-radius: 4px;
+  padding: 0.5rem 1rem !important;
+  margin: .5rem;
 }
